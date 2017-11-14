@@ -37,3 +37,21 @@ kafka-service:
     - watch:
       - file: kafka-config
     {%- endif %}
+
+#kafka manager
+kafka-manager-conf:
+  file.managed:
+    - template: jinja
+    - name: /usr/share/kafka-manager/conf/application.conf
+    - source: salt://kafka/files/application.conf
+    - require:
+      - kafka-manager
+    - context:
+      zookeepers: {{ zk.connection_string }}
+
+kafka-manager-env:
+  file.managed:
+    - name: /etc/default/kafka-manager
+    - source: salt://kafka/files/kafka-manager-envars
+    - require:
+      - kafka-manager
