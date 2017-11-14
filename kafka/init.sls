@@ -1,3 +1,4 @@
+{%- set private_repo_url = salt['pillar.get']('kafka:config:private_repo_url') %}
 confluentrepo:
   pkgrepo.managed:
     - humanname: Confluent repository
@@ -9,7 +10,7 @@ confluentrepo:
 privaterepo:
   pkgrepo.managed:
     - humanname: Build01 repository
-    - baseurl: {{ pillar['kafka:config:private_repo_url'] }}
+    - baseurl: {{ private_repo_url }}
     - enabled: 1
     - gpgcheck: 0
 {% for package in ['confluent-kafka-2.11',
@@ -30,7 +31,7 @@ kafka-manager:
   pkg.installed:
     - refresh: True
     - require:
-      - privaterepo:
+      - privaterepo
 
 kafka-user:
   user.present:
